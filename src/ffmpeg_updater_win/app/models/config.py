@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import ConfigDict
 
 from ffmpeg_updater_win.app.enums import (
     CodexSourceType,
@@ -9,15 +9,12 @@ from ffmpeg_updater_win.app.enums import (
     UpdaterComponentType,
     WinPlatformType,
 )
+from ffmpeg_updater_win.app.models.abstract import BaseStrictConfigModel
 
 
-class UpdaterConfig(BaseModel):
+class UpdaterConfig(BaseStrictConfigModel):
     model_config = ConfigDict(
-        strict=True,
-        frozen=True,
-        extra='forbid',
-        arbitrary_types_allowed=True,
-        str_strip_whitespace=True,
+        strict=True, frozen=True, extra='forbid', arbitrary_types_allowed=True
     )
 
     component: UpdaterComponentType

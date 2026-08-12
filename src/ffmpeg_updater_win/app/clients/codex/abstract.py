@@ -2,7 +2,9 @@ from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 from typing import ClassVar, Literal
 
-from ffmpeg_updater_win.app.clients.abstract import BaseAPIClient
+from aiohttp import ClientSession, TCPConnector
+from loguru import logger
+
 from ffmpeg_updater_win.app.constants import CHUNK_SIZE
 from ffmpeg_updater_win.app.enums import (
     CodexArchExtensionType,
@@ -12,8 +14,26 @@ from ffmpeg_updater_win.app.enums import (
 from ffmpeg_updater_win.app.third_party.stream_unzip import stream_unzip
 
 
-class BaseCodexFFAPIClient(BaseAPIClient, ABC):
+class BaseCodexFFAPIClient(ABC):
     BUILDS_URL: ClassVar[str | None] = None
+
+    def __init__(self) -> None:
+        self._log = logger
+        self._log.debug('Initializing "{}"', self.__class__.__name__)
+        self._session = ClientSession(
+            connector=TCPConnector(verify_ssl=False), raise_for_status=True
+        )
+
+    async def _get_text(self, url: str) -> str:
+        """Get text from request."""
+        self._log.debug('GET {}', url)
+        async with self._session.get(url) as response:
+            return await response.text()
+
+    async def close_session(self) -> None:
+        """Close `ClientSession`."""
+        self._log.debug('Close client session')
+        await self._session.close()
 
     async def download_latest_version(
         self,

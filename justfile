@@ -11,3 +11,4 @@ build:
 s: sync
 f: fix
 b: build
+u: s f

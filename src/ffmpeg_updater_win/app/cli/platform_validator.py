@@ -3,6 +3,7 @@ import platform
 import typer
 from rich.panel import Panel
 
+from ffmpeg_updater_win.app.banner import BANNER
 from ffmpeg_updater_win.app.constants import (
     APP_NAME,
     APP_VERSION,
@@ -15,6 +16,7 @@ from ffmpeg_updater_win.app.utils import rich_console
 def abort_on_non_windows() -> None:
     system = platform.system()
     if system != WINDOWS_PLATFORM:
+        rich_console.print(BANNER)
         rich_console.print(
             Panel(
                 f'[red]Unsupported system: {system}',

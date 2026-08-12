@@ -2,52 +2,19 @@
 
 import asyncio
 import functools
-import re
 from collections.abc import Coroutine
 from io import StringIO
 from typing import TYPE_CHECKING, Any, Final
-from zipfile import ZipFile
 
 from loguru import logger
-from packaging.version import Version
 from rich.console import Console
 
-from ffmpeg_updater_win.app.clients.codex_ffmpeg.models import ByteResponse
 from ffmpeg_updater_win.app.exceptions import CommandError
 
 if TYPE_CHECKING:
     from loguru import Logger  # noqa: TC004
 
 rich_console: Final[Console] = Console()
-
-
-def response_to_zip(data: ByteResponse, filename: str | None = None) -> ZipFile:
-    """Create zip-like file object from `requests` response and set its real filename."""
-    zip_obj = ZipFile(data.bytes_data)
-    if not filename:
-        filename = get_filename_from_header(data.headers) or get_filename_from_url(
-            data.url
-        )
-    zip_obj.filename = filename
-    return zip_obj
-
-
-def get_filename_from_header(headers: dict) -> str:
-    match = re.search(r'filename=(.+)', headers.get('Content-Disposition', ''))
-    return match.group(1) if match else ''
-
-
-def get_filename_from_url(url: str) -> str:
-    return url.rsplit('/', 1)[-1]
-
-
-def get_largest_value(items: list[str]) -> str:
-    """Return the string representation of the highest version.
-
-    Assumes items are PEP 440 compatible version strings.
-    Raises InvalidVersion if any value cannot be parsed.
-    """
-    return str(max(map(Version, items)))
 
 
 async def get_stdout(

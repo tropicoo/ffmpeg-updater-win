@@ -1,8 +1,6 @@
 from typing import ClassVar, Literal
 
-from ffmpeg_updater_win.app.clients.codex_ffmpeg.clients.abstract import (
-    BaseCodexFFAPIClient,
-)
+from ffmpeg_updater_win.app.clients.codex.abstract import BaseCodexFFAPIClient
 from ffmpeg_updater_win.app.enums import (
     CodexAPIPathType,
     CodexArchExtensionType,
