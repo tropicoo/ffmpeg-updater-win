@@ -1,17 +1,17 @@
-"""Updater module."""
+"""FFmpeg Updater module."""
 
 import asyncio
 
 from loguru import logger
 
 from ffmpeg_updater_win.app.constants import APP_VERSION
-from ffmpeg_updater_win.app.exceptions import UpdaterError
+from ffmpeg_updater_win.app.exceptions import FFmpegUpdaterError
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.tasks.managers import TaskManager
 
 
-class Updater:
-    """Main updater class."""
+class FFmpegUpdater:
+    """Main FFmpeg FFmpegUpdater Class."""
 
     def __init__(self, config: UpdaterConfig) -> None:
         self._log = logger
@@ -37,4 +37,4 @@ class Updater:
             return
 
         if not path.is_dir():
-            raise UpdaterError(f'{path} is not a directory')
+            raise FFmpegUpdaterError(f'{path} is not a directory')

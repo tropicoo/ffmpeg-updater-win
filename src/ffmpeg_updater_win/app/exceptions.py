@@ -5,13 +5,13 @@ class BaseUpdaterError(Exception):
     pass
 
 
-class UpdaterError(BaseUpdaterError):
-    """Updater Base Exception Class."""
+class FFmpegUpdaterError(BaseUpdaterError):
+    """FFmpeg Updater Base Exception Class."""
 
 
-class NoFileToExtractError(UpdaterError):
+class NoFileToExtractError(FFmpegUpdaterError):
     pass
 
 
-class CommandError(UpdaterError):
+class CommandError(FFmpegUpdaterError):
     pass

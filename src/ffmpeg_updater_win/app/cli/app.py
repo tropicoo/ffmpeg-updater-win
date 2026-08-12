@@ -1,15 +1,13 @@
-import asyncio
 from pathlib import Path
 from typing import Annotated, Final
 
 import typer
-from loguru import logger
 
 from ffmpeg_updater_win.app.banner import BANNER
 from ffmpeg_updater_win.app.cli.callbacks import version_callback
 from ffmpeg_updater_win.app.cli.platform_validator import abort_on_non_windows
-from ffmpeg_updater_win.app.constants import DEF_EXTRACT_PATH
-from ffmpeg_updater_win.app.core.updater import Updater
+from ffmpeg_updater_win.app.constants import DEFAULT_EXTRACT_PATH
+from ffmpeg_updater_win.app.core.main import main_start
 from ffmpeg_updater_win.app.enums import (
     CodexSourceType,
     FFSourceType,
@@ -17,7 +15,6 @@ from ffmpeg_updater_win.app.enums import (
     UpdaterComponentType,
     WinPlatformType,
 )
-from ffmpeg_updater_win.app.log import init_logging
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.utils import rich_console
 
@@ -39,10 +36,10 @@ def run(  # noqa: PLR0913, PLR0917
         UpdaterComponentType.FFMPEG,
         '-c',
         '--component',
-        help=f'Updater components to update; currently, only "{UpdaterComponentType.FFMPEG}" is supported',
+        help=f'FFmpeg Updater components to update; currently, only "{UpdaterComponentType.FFMPEG}" is supported',
     ),
     destination: Path = typer.Option(
-        DEF_EXTRACT_PATH,
+        DEFAULT_EXTRACT_PATH,
         '-d',
         '--destination',
         file_okay=False,
@@ -88,11 +85,4 @@ def run(  # noqa: PLR0913, PLR0917
         codex_source=codex_source,
         verbose=LogLevelType(verbose),
     )
-    init_logging(log_level=updater_config.verbose)
-
-    rich_console.print(BANNER)
-    logger.info('Starting main app')
-    try:
-        asyncio.run(Updater(config=updater_config).run())
-    finally:
-        logger.info('Exiting main app')
+    main_start(updater_config=updater_config)

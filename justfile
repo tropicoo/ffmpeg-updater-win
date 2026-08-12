@@ -1,4 +1,5 @@
 sync:
+    uv self update
     uv sync -U --all-groups --all-extras
 
 fix:
