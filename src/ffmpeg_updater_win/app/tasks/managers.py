@@ -5,7 +5,7 @@ from typing import ClassVar
 
 from loguru import logger
 
-from ffmpeg_updater_win.app.clients.abstract import BaseAPIClient
+from ffmpeg_updater_win.app.clients.codex.abstract import BaseCodexFFAPIClient
 from ffmpeg_updater_win.app.enums import UpdaterComponentType
 from ffmpeg_updater_win.app.mappings import get_api_cls
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
@@ -41,5 +41,7 @@ class TaskManager:
             )
         return tasks
 
-    def _create_api_client(self, task_cls: type[BaseUpdaterTask]) -> BaseAPIClient:
+    def _create_api_client(
+        self, task_cls: type[BaseUpdaterTask]
+    ) -> BaseCodexFFAPIClient:
         return get_api_cls(settings=self._settings, updater_task_cls=task_cls)()
