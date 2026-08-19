@@ -6,8 +6,8 @@ from typing import ClassVar
 from loguru import logger
 
 from ffmpeg_updater_win.app.clients.codex.abstract import BaseCodexFFAPIClient
+from ffmpeg_updater_win.app.clients.codex.mappings import get_api_cls
 from ffmpeg_updater_win.app.enums import UpdaterComponentType
-from ffmpeg_updater_win.app.mappings import get_api_cls
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.tasks.abstract import BaseUpdaterTask
 from ffmpeg_updater_win.app.tasks.codex import CodexFfmpegUpdaterTask

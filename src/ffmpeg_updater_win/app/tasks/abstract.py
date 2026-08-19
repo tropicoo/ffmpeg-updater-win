@@ -1,5 +1,4 @@
 import asyncio
-import re
 from abc import ABC, abstractmethod
 from typing import ClassVar
 
@@ -7,7 +6,7 @@ from loguru import logger
 from rich.panel import Panel
 
 from ffmpeg_updater_win.app.clients.codex.abstract import BaseCodexFFAPIClient
-from ffmpeg_updater_win.app.constants import CMD_FFMPEG_VERSION_ARG, FFMPEG_NUM_REGEX
+from ffmpeg_updater_win.app.constants import CMD_FFMPEG_VERSION_ARG, FFMPEG_VERSION_RE
 from ffmpeg_updater_win.app.enums import FFSourceType, RequiredFfbinaryType
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.utils import get_stdout, render_to_ansi
@@ -101,11 +100,11 @@ class BaseFFmpegUpdaterTask(BaseUpdaterTask, ABC):
             self._log.warning('Error getting local FFmpeg build version: "{}"', err)
             return None
 
-        match = re.match(FFMPEG_NUM_REGEX, stdout)
+        match = FFMPEG_VERSION_RE.match(stdout)
         if not match:
             self._log.warning(
                 'Error getting local FFmpeg build version using regex "{}"',
-                FFMPEG_NUM_REGEX,
+                FFMPEG_VERSION_RE.pattern,
             )
             return None
         return match.group(1)

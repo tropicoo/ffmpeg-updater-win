@@ -14,7 +14,7 @@ from ffmpeg_updater_win.app.utils import rich_console
 
 
 def abort_on_non_windows() -> None:
-    system = platform.system()
+    system: str = platform.system()
     if system != WINDOWS_PLATFORM:
         rich_console.print(BANNER)
         rich_console.print(

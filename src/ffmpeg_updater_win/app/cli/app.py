@@ -5,9 +5,10 @@ import typer
 
 from ffmpeg_updater_win.app.banner import BANNER
 from ffmpeg_updater_win.app.cli.callbacks import version_callback
-from ffmpeg_updater_win.app.cli.platform_validator import abort_on_non_windows
+from ffmpeg_updater_win.app.cli.validators import abort_on_non_windows
 from ffmpeg_updater_win.app.constants import DEFAULT_EXTRACT_PATH
-from ffmpeg_updater_win.app.core.main import main_start
+from ffmpeg_updater_win.app.core.controller import MainAppController
+from ffmpeg_updater_win.app.core.ffmpeg_updater import FFmpegUpdater
 from ffmpeg_updater_win.app.enums import (
     CodexSourceType,
     FFSourceType,
@@ -15,6 +16,7 @@ from ffmpeg_updater_win.app.enums import (
     UpdaterComponentType,
     WinPlatformType,
 )
+from ffmpeg_updater_win.app.log import init_logging
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.utils import rich_console
 
@@ -36,7 +38,8 @@ def run(  # noqa: PLR0913, PLR0917
         UpdaterComponentType.FFMPEG,
         '-c',
         '--component',
-        help=f'FFmpeg Updater components to update; currently, only "{UpdaterComponentType.FFMPEG}" is supported',
+        help=f'FFmpeg Updater components to update; currently, '
+        f'only "{UpdaterComponentType.FFMPEG}" is supported',
     ),
     destination: Path = typer.Option(
         DEFAULT_EXTRACT_PATH,
@@ -44,20 +47,20 @@ def run(  # noqa: PLR0913, PLR0917
         '--destination',
         file_okay=False,
         dir_okay=True,
-        help='Ffmpeg destination directory path',
+        help='FFmpeg destination directory path',
     ),
     platform: WinPlatformType = typer.Option(
         WinPlatformType.WIN64,
         '-p',
         '--platform',
-        help='Ffmpeg binaries os platform',
+        help='FFmpeg binaries os platform',
     ),
     force: bool = typer.Option(False, '-f', '--force', help='Perform force update'),  # noqa: FBT003
     ffmpeg_source: FFSourceType = typer.Option(
         FFSourceType.CODEX,
         '-fsrc',
         '--ffmpeg-source',
-        help=f'Ffmpeg binaries source; currently, only "{FFSourceType.CODEX}" is supported',
+        help=f'FFmpeg binaries source; currently, only "{FFSourceType.CODEX}" is supported',
     ),
     codex_source: CodexSourceType = typer.Option(
         CodexSourceType.GITHUB,
@@ -85,4 +88,5 @@ def run(  # noqa: PLR0913, PLR0917
         codex_source=codex_source,
         verbose=LogLevelType(verbose),
     )
-    main_start(updater_config=updater_config)
+    init_logging(log_level=updater_config.verbose)
+    MainAppController(updater=FFmpegUpdater(config=updater_config)).run()
