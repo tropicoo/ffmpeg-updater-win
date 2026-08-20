@@ -6,7 +6,7 @@ from loguru import logger
 from rich.panel import Panel
 
 from ffmpeg_updater_win.app.clients.codex.abstract import BaseCodexFFAPIClient
-from ffmpeg_updater_win.app.constants import CMD_FFMPEG_VERSION_ARG, FFMPEG_VERSION_RE
+from ffmpeg_updater_win.app.constants import FFMPEG_VERSION_ARG, FFMPEG_VERSION_RE
 from ffmpeg_updater_win.app.enums import FFSourceType, RequiredFfbinaryType
 from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.utils import get_stdout, render_to_ansi
@@ -85,7 +85,7 @@ class BaseFFmpegUpdaterTask(BaseUpdaterTask, ABC):
         bin_path = self._settings.destination / RequiredFfbinaryType.FFMPEG
         try:
             stdout = await get_stdout(
-                cmd=(bin_path.as_posix(), CMD_FFMPEG_VERSION_ARG), log=self._log
+                cmd=(bin_path.as_posix(), FFMPEG_VERSION_ARG), log=self._log
             )
             panel = Panel(f'[blue]\n{stdout}', title='FFmpeg Version')
             self._log.debug(

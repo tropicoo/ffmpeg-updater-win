@@ -16,12 +16,14 @@ if TYPE_CHECKING:
 
 rich_console: Final[Console] = Console()
 
+_DEFAULT_COMMAND_TIMEOUT: Final[int] = 10
+
 
 async def get_stdout(
     cmd: list[str] | tuple[str, ...],
     log: Logger | None = None,
     raise_on_stderr: bool = False,
-    timeout: float = 10,
+    timeout: float = _DEFAULT_COMMAND_TIMEOUT,
 ) -> str:
     log = log or logger
     proc = await asyncio.create_subprocess_exec(

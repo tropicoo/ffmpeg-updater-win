@@ -13,6 +13,6 @@ WINDOWS_PLATFORM: Final[str] = 'Windows'
 DEFAULT_EXTRACT_PATH: Final[Path] = Path(r'C:\youtube-dl')
 
 FFMPEG_VERSION_RE: Final[re.Pattern[str]] = re.compile(r'^ffmpeg\s+version\s+([\d\.]+)')
-CMD_FFMPEG_VERSION_ARG: Final[str] = '-version'
+FFMPEG_VERSION_ARG: Final[str] = '-version'
 
 CHUNK_SIZE: Final[int] = 1024 * 1024
