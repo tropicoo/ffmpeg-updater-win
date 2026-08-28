@@ -25,7 +25,7 @@ typer_app: Final[typer.Typer] = typer.Typer(invoke_without_command=True)
 
 @typer_app.callback()
 def main(ctx: typer.Context) -> None:
-    """FFmpeg updater CLI."""
+    """FFmpeg updater CLI callback to show ."""
     if ctx.invoked_subcommand is None:
         rich_console.print(BANNER)
         typer.echo(ctx.get_help())

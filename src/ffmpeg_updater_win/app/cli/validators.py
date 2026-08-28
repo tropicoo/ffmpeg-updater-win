@@ -19,7 +19,8 @@ def abort_on_non_windows() -> None:
         rich_console.print(BANNER)
         rich_console.print(
             Panel(
-                f'[red]Unsupported system: {system}',
+                f'[red]Unsupported system: {system}\n'
+                f'This application is intended to run on Windows[/red]',
                 title=f'{APP_NAME} {APP_VERSION}',
                 border_style='red',
             )
