@@ -24,7 +24,7 @@ class MainAppController:
         logger.info('Starting main app')
         try:
             asyncio.run(self._updater.run())
-        except Exception:
+        except Exception:  # noqa: BLE001
             logger.exception('Update failed')
             raise typer.Exit(code=ExitCodeType.EXIT_ERROR) from None
         finally:

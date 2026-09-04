@@ -13,4 +13,5 @@ def get_api_cls(
     """Return the Codex API client class for the given updater task."""
     if issubclass(updater_task_cls, CodexFfmpegUpdaterTask):
         return CODEX_SOURCE_API_MAP[settings.codex_source]
-    raise ValueError(f'Unknown updater task class "{updater_task_cls}"')
+    msg = f'Unknown updater task class "{updater_task_cls}"'
+    raise ValueError(msg)

@@ -38,4 +38,5 @@ class FFmpegUpdater:
             return
 
         if not path.is_dir():
-            raise FFmpegUpdaterError(f'{path} is not a directory')
+            msg = f'{path} is not a directory'
+            raise FFmpegUpdaterError(msg)

@@ -7,7 +7,7 @@ from io import StringIO
 from typing import TYPE_CHECKING, Any, Final
 
 from loguru import logger
-from rich.console import Console
+from rich.console import Console, RenderableType
 
 from ffmpeg_updater_win.app.exceptions import CommandError
 
@@ -23,6 +23,7 @@ _DEFAULT_COMMAND_TIMEOUT: Final[int] = 10
 
 async def get_stdout(
     cmd: list[str] | tuple[str, ...],
+    *,
     log: Logger | None = None,
     raise_on_stderr: bool = False,
     timeout: float = _DEFAULT_COMMAND_TIMEOUT,
@@ -39,7 +40,8 @@ async def get_stdout(
         proc.kill()
         await proc.wait()
         log.error('Command "{}" timed out after {} seconds', cmd, timeout)  # noqa: TRY400
-        raise CommandError(f'Command timed out: {cmd}') from err
+        msg = f'Command timed out: {cmd}'
+        raise CommandError(msg) from err
 
     log.debug('Command "{}" exited with returncode {}', cmd, proc.returncode)
 
@@ -93,7 +95,7 @@ def _handle_task_result(
         log.exception(exception_message, *exception_message_args)
 
 
-def render_to_ansi(renderable: Any, *, width: int | None = None) -> str:
+def render_to_ansi(renderable: RenderableType, *, width: int | None = None) -> str:
     """Render a Rich object to an ANSI string."""
     buf = StringIO()
     console = Console(file=buf, width=width)

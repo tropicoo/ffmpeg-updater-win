@@ -30,21 +30,19 @@ class TaskManager:
 
     def create_tasks(self) -> list[Task]:
         """Build and schedule updater tasks for the configured component."""
-        tasks: list[Task] = []
-        for task_cls in self.TASKS[self._settings.component]:
-            tasks.append(
-                create_task(
-                    task_cls(
-                        settings=self._settings,
-                        api_client=self._create_api_client(task_cls=task_cls),
-                    ).run(),
-                    log=self._log,
-                    task_name=task_cls.__name__,
-                    exception_message='Task {} raised an exception',
-                    exception_message_args=(task_cls.__name__,),
-                )
+        return [
+            create_task(
+                task_cls(
+                    settings=self._settings,
+                    api_client=self._create_api_client(task_cls=task_cls),
+                ).run(),
+                log=self._log,
+                task_name=task_cls.__name__,
+                exception_message='Task {} raised an exception',
+                exception_message_args=(task_cls.__name__,),
             )
-        return tasks
+            for task_cls in self.TASKS[self._settings.component]
+        ]
 
     def _create_api_client(
         self, task_cls: type[BaseUpdaterTask]

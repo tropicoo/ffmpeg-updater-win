@@ -46,38 +46,26 @@ inline-quotes = "single"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN002",
-    "ANN003",
-    "ANN401",
-    "ASYNC109",
-    "ASYNC110",
-    "B008",
-    "BLE001",
+    # Conflict with the ruff formatter.
     "COM812",
-    "CPY001",
-    "D100",
-    "D101",
-    "D102",
-    "D103",
-    "D104",
-    "D105",
-    "D107",
+    "E501",
+    "ISC001",
+    # Mutually incompatible with D211/D212, which are preferred.
     "D203",
     "D213",
-    "E501",
-    "EM101",
-    "EM102",
-    "FAST002",
+    # No copyright headers in this project.
+    "CPY001",
+    # Typer needs `typer.Option()` calls as argument defaults.
+    "B008",
+    # Typer maps boolean flags to positional boolean parameters.
     "FBT001",
-    "FBT002",
-    "FIX002",
-    "INP001",
-    "ISC001",
-    "PERF401",
+    # `*args`/`**kwargs` are pass-through to base classes.
+    "ANN002",
+    "ANN003",
+    # `get_stdout` intentionally exposes its own `timeout` argument.
+    "ASYNC109",
+    # False positive for loguru's brace-style lazy formatting.
     "PLE1205",
-    "TD002",
-    "TD003",
-    "TRY003",
 ]
 
 [tool.ruff.format]
