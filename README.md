@@ -71,7 +71,7 @@ uv tool install git+https://github.com/tropicoo/youtube-dl-ffmpeg-updater-win
 │ --platform       -p         <win32|win64>   Ffmpeg binaries os platform [default: win64]                                              │
 │ --force          -f                         Perform force update                                                                      │
 │ --ffmpeg-source  -fsrc      <codex>         Ffmpeg binaries source; currently, only "codex" is supported [default: codex]             │
-│ --codex--source  -csrc      <github|codex>  Codex binaries download source [default: github]                                          │
+│ --codex-source   -csrc      <github|codex>  Codex binaries download source [default: github]                                          │
 │ --verbose        -v         <0|1|2|3>       Log level 0-3 [default: 2]                                                                │
 │ --version        -V                         Show app version                                                                          │
 │ --help                                      Show this message and exit.                                                               │

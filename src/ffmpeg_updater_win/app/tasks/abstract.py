@@ -1,3 +1,5 @@
+"""Abstract updater tasks and FFmpeg version checks."""
+
 import asyncio
 from abc import ABC, abstractmethod
 from typing import ClassVar
@@ -13,35 +15,43 @@ from ffmpeg_updater_win.app.utils import get_stdout, render_to_ansi
 
 
 class BaseUpdaterTask[T: BaseCodexFFAPIClient](ABC):
+    """Run an update against an HTTP client and always close the session."""
+
     def __init__(self, api_client: T, settings: UpdaterConfig) -> None:
+        """Store the API client and updater settings."""
         self._log = logger
         self._log.debug('Initializing "{}"', self.__class__.__name__)
         self._api_client = api_client
         self._settings = settings
 
     async def run(self) -> None:
+        """Execute the update and close the HTTP session afterwards."""
         try:
             await self._update()
         finally:
             await self._cleanup()
 
     async def _cleanup(self) -> None:
+        """Close the API client session."""
         await self._api_client.close_session()
 
     @abstractmethod
     async def _update(self) -> None:
-        pass
+        """Perform the source-specific update."""
 
 
 class BaseFFmpegUpdaterTask(BaseUpdaterTask, ABC):
+    """FFmpeg updater that skips download when local binaries are current."""
+
     TYPE: ClassVar[FFSourceType | None] = None
+    """FFmpeg source this task knows how to update."""
 
     @abstractmethod
     async def _perform_update(self) -> None:
-        pass
+        """Download and extract binaries when an update is required."""
 
     async def _update(self) -> None:
-        """Update FFmpeg build."""
+        """Update FFmpeg binaries when the local build is missing or outdated."""
         self._log.info('Updating FFmpeg binaries from "{}"', self.TYPE)
         if await self._needs_update():
             await self._perform_update()
@@ -52,7 +62,7 @@ class BaseFFmpegUpdaterTask(BaseUpdaterTask, ABC):
             )
 
     async def _needs_update(self) -> bool:
-        """Check if ffbinaries need to be updated."""
+        """Return whether local binaries should be replaced."""
         if self._settings.force or not self._all_ffbinaries_exist():
             return True
 
@@ -74,14 +84,14 @@ class BaseFFmpegUpdaterTask(BaseUpdaterTask, ABC):
         return False
 
     def _all_ffbinaries_exist(self) -> bool:
-        """Check whether all FFmpeg binaries exist on disk."""
+        """Return whether all required FFmpeg binaries exist on disk."""
         files = {path.name for path in self._settings.destination.iterdir()}
         return len(set(files) & RequiredFfbinaryType.choices()) == len(
             RequiredFfbinaryType
         )
 
     async def _get_local_version(self) -> str | None:
-        """Get local FFmpeg build numerical build version."""
+        """Return the local FFmpeg numeric version, or None if it cannot be read."""
         bin_path = self._settings.destination / RequiredFfbinaryType.FFMPEG
         try:
             stdout = await get_stdout(

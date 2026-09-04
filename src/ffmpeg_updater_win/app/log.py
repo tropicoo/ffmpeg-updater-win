@@ -1,4 +1,4 @@
-"""Logging Module."""
+"""Logging configuration."""
 
 import sys
 
@@ -8,7 +8,7 @@ from ffmpeg_updater_win.app.enums import LogLevelType
 
 
 def init_logging(log_level: LogLevelType) -> None:
-    """Init logging function. Used for new processes that don't have configured `root` logger."""
+    """Configure Loguru to write colorized messages to stderr."""
     logger.remove()
     logger.add(
         sys.stderr,

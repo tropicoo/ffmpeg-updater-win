@@ -1,4 +1,4 @@
-"""Utils Module."""
+"""Async helpers for subprocesses, tasks, and Rich rendering."""
 
 import asyncio
 import functools
@@ -15,8 +15,10 @@ if TYPE_CHECKING:
     from loguru import Logger  # noqa: TC004
 
 rich_console: Final[Console] = Console()
+"""Shared Rich console used for banners and CLI messages."""
 
 _DEFAULT_COMMAND_TIMEOUT: Final[int] = 10
+"""Default subprocess timeout in seconds."""
 
 
 async def get_stdout(
@@ -25,6 +27,7 @@ async def get_stdout(
     raise_on_stderr: bool = False,
     timeout: float = _DEFAULT_COMMAND_TIMEOUT,
 ) -> str:
+    """Run a command and return decoded stdout."""
     log = log or logger
     proc = await asyncio.create_subprocess_exec(
         *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
@@ -59,6 +62,7 @@ def create_task[T](  # noqa: PLR0913
     exception_message_args: tuple[Any, ...] = (),
     loop: asyncio.AbstractEventLoop | None = None,
 ) -> asyncio.Task[T]:
+    """Schedule a coroutine and log unexpected exceptions when it finishes."""
     if loop is None:
         loop = asyncio.get_running_loop()
     task = loop.create_task(coroutine, name=task_name)
@@ -80,6 +84,7 @@ def _handle_task_result(
     exception_message: str,
     exception_message_args: tuple[Any, ...] = (),
 ) -> None:
+    """Log a task exception unless the task was cancelled."""
     try:
         task.result()
     except asyncio.CancelledError:
@@ -89,6 +94,7 @@ def _handle_task_result(
 
 
 def render_to_ansi(renderable: Any, *, width: int | None = None) -> str:
+    """Render a Rich object to an ANSI string."""
     buf = StringIO()
     console = Console(file=buf, width=width)
     console.print(renderable)
