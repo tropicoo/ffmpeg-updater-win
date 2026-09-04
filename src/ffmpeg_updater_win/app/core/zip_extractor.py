@@ -1,4 +1,4 @@
-"""Zip Extractor module."""
+"""Stream-extract required FFmpeg binaries from a zip download."""
 
 import asyncio
 from collections.abc import AsyncGenerator
@@ -14,9 +14,10 @@ from ffmpeg_updater_win.app.utils import create_task
 
 
 class ZipStreamExtractor:
-    """Stream FFmpeg binaries chunk extractor."""
+    """Write FFmpeg executables from a zip member stream and validate them."""
 
     def __init__(self, settings: UpdaterConfig) -> None:
+        """Bind extractor settings and prepare the validation-task list."""
         self._log = logger
         self._log.debug('Initializing "{}"', self.__class__.__name__)
         self._settings = settings
@@ -28,7 +29,7 @@ class ZipStreamExtractor:
             tuple[bytes, int, AsyncGenerator[bytes, None]], None
         ],
     ) -> None:
-        """Process stream chunks, write FFmpeg binaries on the fly and fire up validation tasks."""
+        """Extract required binaries from zip members and wait for validation."""
         ffbinaries = RequiredFfbinaryType.choices()
         written_files_count, ffbinaries_count = 0, len(ffbinaries)
         async for member_, _file_size, unzipped_chunks in stream_generator:
@@ -50,7 +51,7 @@ class ZipStreamExtractor:
         self._log.info('All FFmpeg binaries updated, zip stream process done')
 
     async def _write_file(self, filename: str, unzipped_chunks) -> None:  # noqa: ANN001
-        """Write unzipped chunks into file."""
+        """Write unzipped chunks into the destination file."""
         file_path = self._settings.destination / filename
         self._log.debug('Write file {}', file_path)
         async with aiofiles.open(file_path, 'wb') as fd_out:
@@ -59,7 +60,7 @@ class ZipStreamExtractor:
         self._start_validation_task(file_path)
 
     def _start_validation_task(self, file_path: Path) -> None:
-        """Spawn exe validation task."""
+        """Spawn an executable validation task for a written binary."""
         self._validation_tasks.append(
             create_task(
                 FFmpegBinValidationTask().validate(file_path),

@@ -1,17 +1,17 @@
-"""Exceptions Module."""
+"""Application exception hierarchy."""
 
 
 class BaseUpdaterError(Exception):
-    pass
+    """Base exception for all updater errors."""
 
 
 class FFmpegUpdaterError(BaseUpdaterError):
-    """FFmpeg Updater Base Exception Class."""
+    """Error raised by FFmpeg update orchestration."""
 
 
 class NoFileToExtractError(FFmpegUpdaterError):
-    pass
+    """Raised when the archive does not contain required FFmpeg binaries."""
 
 
 class CommandError(FFmpegUpdaterError):
-    pass
+    """Raised when a subprocess fails, times out, or writes unexpected stderr."""

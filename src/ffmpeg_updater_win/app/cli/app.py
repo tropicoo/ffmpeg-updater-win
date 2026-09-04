@@ -1,3 +1,5 @@
+"""Typer CLI for updating FFmpeg binaries on Windows."""
+
 from pathlib import Path
 from typing import Annotated, Final
 
@@ -21,11 +23,12 @@ from ffmpeg_updater_win.app.models.config import UpdaterConfig
 from ffmpeg_updater_win.app.utils import rich_console
 
 typer_app: Final[typer.Typer] = typer.Typer(invoke_without_command=True)
+"""Root Typer application invoked by the `ffmpeg-updater-win` script."""
 
 
 @typer_app.callback()
 def main(ctx: typer.Context) -> None:
-    """FFmpeg updater CLI callback to show ."""
+    """Show the banner and help when no subcommand is given."""
     if ctx.invoked_subcommand is None:
         rich_console.print(BANNER)
         typer.echo(ctx.get_help())
@@ -65,7 +68,7 @@ def run(  # noqa: PLR0913, PLR0917
     codex_source: CodexSourceType = typer.Option(
         CodexSourceType.GITHUB,
         '-csrc',
-        '--codex--source',
+        '--codex-source',
         help='Codex binaries download source',
     ),
     verbose: LogLevelType = typer.Option(
@@ -78,6 +81,7 @@ def run(  # noqa: PLR0913, PLR0917
         ),
     ] = None,
 ) -> None:
+    """Download and install FFmpeg binaries into the destination directory."""
     abort_on_non_windows()
     updater_config = UpdaterConfig(
         component=component,

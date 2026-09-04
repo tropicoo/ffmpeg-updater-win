@@ -1,3 +1,5 @@
+"""CLI preflight checks."""
+
 import platform
 
 import typer
@@ -14,6 +16,7 @@ from ffmpeg_updater_win.app.utils import rich_console
 
 
 def abort_on_non_windows() -> None:
+    """Exit with an error if the host OS is not Windows."""
     system: str = platform.system()
     if system != WINDOWS_PLATFORM:
         rich_console.print(BANNER)

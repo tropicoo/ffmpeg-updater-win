@@ -1,4 +1,4 @@
-"""FFmpeg Updater module."""
+"""Orchestrates FFmpeg update tasks."""
 
 import asyncio
 
@@ -11,9 +11,10 @@ from ffmpeg_updater_win.app.tasks.managers import TaskManager
 
 
 class FFmpegUpdater:
-    """Main FFmpeg FFmpegUpdater Class."""
+    """Ensure the destination exists and run configured update tasks."""
 
     def __init__(self, config: UpdaterConfig) -> None:
+        """Create a task manager from the given config."""
         self._log = logger
         self._log.info(
             'Initializing "{}" version {}', self.__class__.__name__, APP_VERSION
@@ -29,7 +30,7 @@ class FFmpegUpdater:
         self._log.info('{}pdate finished', 'Force u' if self._conf.force else 'U')
 
     def _check_destination_path_existence(self) -> None:
-        """Check if destination path exists and is a directory."""
+        """Create the destination directory if needed, or reject a non-directory path."""
         path = self._conf.destination
         if not path.exists():
             self._log.info('Creating destination directory "{}"', path)

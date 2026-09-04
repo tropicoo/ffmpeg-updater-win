@@ -1,3 +1,5 @@
+"""Maps Codex download sources to HTTP client classes."""
+
 from typing import Final
 
 from ffmpeg_updater_win.app.clients.codex.abstract import BaseCodexFFAPIClient
@@ -9,3 +11,4 @@ CODEX_SOURCE_API_MAP: Final[dict[CodexSourceType, type[BaseCodexFFAPIClient]]] =
     CodexSourceType.CODEX: CodexFFAPIClient,
     CodexSourceType.GITHUB: CodexFFGithubAPIClient,
 }
+"""Lookup from CLI Codex source to the client that downloads that source."""

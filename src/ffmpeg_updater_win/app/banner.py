@@ -1,3 +1,5 @@
+"""ASCII banner shown on CLI startup and error screens."""
+
 from typing import Final
 
 from ffmpeg_updater_win.app.constants import APP_VERSION
@@ -13,3 +15,4 @@ BANNER: Final[str] = f"""
 [/green]
                                                                                                             [green]{APP_VERSION}[/green]
 """
+"""Rich markup banner including the current application version."""

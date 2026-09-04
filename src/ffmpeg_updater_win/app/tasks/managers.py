@@ -1,4 +1,4 @@
-"""Managers Module."""
+"""Factory that turns config into runnable updater tasks."""
 
 from asyncio import Task
 from typing import ClassVar
@@ -15,16 +15,21 @@ from ffmpeg_updater_win.app.utils import create_task
 
 
 class TaskManager:
+    """Create asyncio tasks for the selected updater component."""
+
     TASKS: ClassVar[dict[UpdaterComponentType, tuple[type[BaseUpdaterTask], ...]]] = {
         UpdaterComponentType.FFMPEG: (CodexFfmpegUpdaterTask,),
     }
+    """Component-to-task-class registry."""
 
     def __init__(self, settings: UpdaterConfig) -> None:
+        """Store updater settings used when creating tasks."""
         self._log = logger
         self._log.debug('Initializing "{}"', self.__class__.__name__)
         self._settings = settings
 
     def create_tasks(self) -> list[Task]:
+        """Build and schedule updater tasks for the configured component."""
         tasks: list[Task] = []
         for task_cls in self.TASKS[self._settings.component]:
             tasks.append(
@@ -44,4 +49,5 @@ class TaskManager:
     def _create_api_client(
         self, task_cls: type[BaseUpdaterTask]
     ) -> BaseCodexFFAPIClient:
+        """Instantiate the HTTP client for a given updater task class."""
         return get_api_cls(settings=self._settings, updater_task_cls=task_cls)()
