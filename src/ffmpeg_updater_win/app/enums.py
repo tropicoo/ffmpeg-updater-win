@@ -35,7 +35,7 @@ class ExitCodeType(IntEnum):
     """Successful run."""
 
     EXIT_ERROR = 1
-    """Fatal error (for example, unsupported OS)."""
+    """Fatal error (unsupported OS, failed update, or other unrecoverable error)."""
 
 
 class UpdaterComponentType(BaseStrChoiceEnum):

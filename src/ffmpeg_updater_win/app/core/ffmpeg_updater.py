@@ -26,7 +26,7 @@ class FFmpegUpdater:
         """Start update tasks."""
         self._log.info('Starting{} update', ' force' if self._conf.force else '')
         self._check_destination_path_existence()
-        await asyncio.gather(*self._task_manager.create_tasks(), return_exceptions=True)
+        await asyncio.gather(*self._task_manager.create_tasks())
         self._log.info('{}pdate finished', 'Force u' if self._conf.force else 'U')
 
     def _check_destination_path_existence(self) -> None:
