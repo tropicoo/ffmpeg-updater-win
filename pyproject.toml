@@ -79,3 +79,4 @@ project-includes = [
     "**/*.py*",
     "**/*.ipynb",
 ]
+project-excludes = ["src/ffmpeg_updater_win/app/third_party"]

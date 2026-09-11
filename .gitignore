@@ -3,7 +3,7 @@
 
 /venv_*
 /.idea
-/tmp.py
+/g.py
 *.pyc
 
 # Byte-compiled / optimized / DLL files
